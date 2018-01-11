@@ -1,0 +1,88 @@
+<coordinator-app name="hubble-daily-coord" frequency="${coord:days(1)}"
+        start="${startTime}" end="${endTime}" timezone="${timezone}" xmlns="uri:oozie:coordinator:0.3">
+
+<controls>
+  <concurrency>${concurrency}</concurrency>
+  <execution>FIFO</execution>
+</controls>
+
+<datasets>
+  <dataset name="input1" frequency="${coord:days(1)}" initial-instance="${initTime}" timezone="${timezone}">
+    <uri-template>${input}/${YEAR}${MONTH}${DAY}/desktop</uri-template>
+    <done-flag>_SUCCESS</done-flag>
+  </dataset>
+  <dataset name="input2" frequency="${coord:days(1)}" initial-instance="${initTime}" timezone="${timezone}">
+    <uri-template>${input}/${YEAR}${MONTH}${DAY}/mobile</uri-template>
+    <done-flag>_SUCCESS</done-flag>
+  </dataset>
+ <dataset name="input3" frequency="${coord:days(1)}" initial-instance="${initTime}" timezone="${timezone}">
+    <uri-template>${input}/${YEAR}${MONTH}${DAY}/tablet</uri-template>
+    <done-flag>_SUCCESS</done-flag>
+ </dataset>
+</datasets>
+
+<input-events>
+  <data-in name="coord-input1" dataset="input1">
+    <instance>${coord:current(0)}</instance>
+  </data-in>
+  <data-in name="coord-input2" dataset="input2">
+    <instance>${coord:current(0)}</instance>
+  </data-in>
+  <data-in name="coord-input3" dataset="input3">
+    <instance>${coord:current(0)}</instance>
+  </data-in>
+</input-events>
+
+<action>
+  <workflow>
+    <app-path>${HDFSCodeRoot}/workflow.xml</app-path>
+    <configuration>
+      <property>
+        <name>appName</name>
+        <value>${appName}</value>
+      </property>
+      <property>
+        <name>jobTracker</name>
+        <value>${jobTracker}</value>
+      </property>
+      <property>
+        <name>nameNode</name>
+        <value>${nameNode}</value>
+      </property>
+      <property>
+        <name>queueName</name>
+        <value>${queueName}</value>
+      </property>
+      <property>
+        <name>mapMemoryMb</name>
+        <value>${mapMemoryMb}</value>
+      </property>
+      <property>
+        <name>reduceMemoryMb</name>
+        <value>${reduceMemoryMb}</value>
+      </property>
+      <property>
+        <name>dfs_umaskmode</name>
+        <value>${dfs_umaskmode}</value>
+      </property>
+      <property>
+	<name>date</name>
+	<value>${coord:formatTime(coord:nominalTime(),'yyyyMMdd')}</value>
+      </property>
+      <property>
+        <name>input</name>
+        <value>${input}</value>
+      </property>
+      <property>
+        <name>output</name>
+        <value>${output}</value>
+      </property>
+      <property>
+        <name>numReducers</name>
+        <value>${numReducers}</value>
+      </property>
+    </configuration>
+  </workflow>
+</action>
+
+</coordinator-app>
