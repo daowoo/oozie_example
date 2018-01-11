@@ -1,12 +1,12 @@
-<workflow-app name='hubble-daily-wf' xmlns='uri:oozie:workflow:0.5'>
+<workflow-app name='mytest' xmlns='uri:oozie:workflow:0.5'>
 
-<start to='hubble-daily' />
-<action name='hubble-daily'>
+<start to='mytest' />
+<action name='mytest'>
     <pig>
         <job-tracker>${jobTracker}</job-tracker>
         <name-node>${nameNode}</name-node>
         <prepare>
-            <delete path="${output}/${date}"/>
+            <delete path="${output}"/>
         </prepare>
         <configuration>
             <property>
@@ -20,18 +20,6 @@
             <property>
                 <name>mapreduce.job.queuename</name>
                 <value>${queueName}</value>
-            </property>
-            <property>
-                <name>mapreduce.map.memory.mb</name>
-                <value>${mapMemoryMb}</value>
-            </property>
-            <property>
-                <name>mapreduce.reduce.memory.mb</name>
-                <value>${reduceMemoryMb}</value>
-            </property>
-            <property>
-                <name>dfs.umaskmode</name>
-                <value>${dfs_umaskmode}</value>
             </property>
             <property>
                 <name>oozie.launcher.mapreduce.job.acl-view-job</name>
@@ -50,11 +38,9 @@
                 <value>*</value>
             </property>
         </configuration>
-        <script>${HDFSCodeRoot}/scripts/NfeatureCFAll.pig</script>
-        <param>POST_SPAM_PATH=${input}/${date}/{desktop,tablet,mobile}</param>
-        <param>OUTPUTROOT=${output}/${date}</param>
-        <param>PARALLEL_CNT=${numReducers}</param>
-	<file>${HDFSCodeRoot}/scripts/ECParser.py</file>
+        <script>${exampleRoot}/script/test.pig</script>
+        <param>input=${input}</param>
+        <param>output=${output}</param>
     </pig>
     <ok to='end' />
     <error to='fail' />
