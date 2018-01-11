@@ -1,0 +1,25 @@
+data = load '/user/hdfs/test_data.csv' using PigStorage(',') as (
+     storage_code:chararray,
+     water_sensor:chararray,
+     water_allert_type:chararray,
+     water_number:int,
+     water_allert_time:chararray,
+     tempreture_sensor:chararray,
+     temp_allert_type:chararray,
+     temp_number:int,
+     temp_allert_time:chararray,
+     pressure_sensor:chararray,
+     pressure_allert_type:chararray,
+     pressure_number:int,
+     pressure_allert_time:chararray,
+     flow_sensor:chararray,
+     flow_allert_type:chararray,
+     flow_number:int,
+     flow_direction:chararray,
+     flow_allert_time:chararray
+);
+
+res = limit data 4;
+dump res;
+
+     
