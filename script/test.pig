@@ -1,3 +1,5 @@
+%default input /user/hdfs/test_data.csv
+%default output /temp/hdfs/oozie_test
 data = load '$input' using PigStorage(',') as (
      storage_code:chararray,
      water_sensor:chararray,
@@ -19,7 +21,16 @@ data = load '$input' using PigStorage(',') as (
      flow_alert_time:chararray
 );
 
-res = limit data 4;
-store res into '$output';
+
+add_date = foreach data generate $5 as tempreture_sensor, $6 as temp_alert_type, $7 as temp_number, $8 as temp_alert_time, SUBSTRING($8,0,10) as alert_date;
+
+gp_by_date = GROUP add_date by alert_date;
+ 
+avg_temp = FOREACH gp_by_date generate 
+	 add_date.alert_date,
+	 AVG(add_date.temp_number);
+
+rmf $output
+store avg_temp into '$output';
 
      
